@@ -68,8 +68,8 @@ const StockOptions = () => {
       headerName: "Top Gainers",
     },
     {
-      headerName: "Net Price",
-      field: "net_price",
+      headerName: "Latest Price",
+      field: "ltp",
       cellRenderer: formatINR,
     },
   ];
@@ -80,8 +80,8 @@ const StockOptions = () => {
       headerName: "Top Loosers",
     },
     {
-      headerName: "Net Price",
-      field: "net_price",
+      headerName: "Latest Price",
+      field: "ltp",
       cellRenderer: formatINR,
     },
   ];
@@ -110,7 +110,7 @@ const StockOptions = () => {
       axios
         .get("https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings")
         .then((res) => {
-          const resp = res.data.data.slice(1, 11);
+          const resp = res.data.data.slice(0, 20);
 
           dispatch({
             type: ACTIONS.INITIAL,
@@ -174,7 +174,7 @@ const StockOptions = () => {
     if (state.topGainer.length > 0 && state.spurts.length > 0) {
       state.spurts.forEach((element) => {
         state.topGainer.forEach((item) => {
-          if (item.symbol === element.symbol) {
+          if (item.symbol === element.symbol && item.ltp > 150) {
             bullStock.push({ symbol: element.symbol });
           }
         });
@@ -194,7 +194,7 @@ const StockOptions = () => {
     if (state.topLooser.length > 0 && state.spurts.length > 0) {
       state.spurts.forEach((element) => {
         state.topLooser.forEach((item) => {
-          if (item.symbol === element.symbol) {
+          if (item.symbol === element.symbol && item.ltp > 150) {
             bearStock.push({ symbol: element.symbol });
           }
         });
