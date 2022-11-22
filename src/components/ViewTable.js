@@ -6,6 +6,8 @@ import React, {
   useCallback,
 } from "react";
 import _ from "lodash";
+import { AiOutlineCaretDown } from "react-icons/ai";
+import { AiOutlineCaretUp } from "react-icons/ai";
 
 import { AgGridReact } from "ag-grid-react";
 import axios from "axios";
@@ -467,15 +469,29 @@ const ViewTable = () => {
       </div>
 
       <div className="flex justify-center mb-2">
-        <h3>
+        <div>
           {option} WEEKLY EXPIRY AS ON
           <span className="text-orange-500 font-bold"> {state.expiry}</span> -
           <span className="font-bold">{` ${
             state.underlyingValue &&
             state.underlyingValue.toLocaleString("en-IN")
           } `}</span>
-          <span>{state.timestamp}</span>
-        </h3>
+          <div className="flex place-content-center">
+            <div>{state.timestamp} -</div>
+            <div>
+              {state.allData?.filtered?.["CE"]?.totOI >
+              state.allData?.filtered?.["PE"]?.totOI ? (
+                <div className="flex items-center text-red-600 font-extrabold">
+                  Bearish <AiOutlineCaretDown />
+                </div>
+              ) : (
+                <div className="flex items-center text-green-600 font-extrabold">
+                  Bullish <AiOutlineCaretUp />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {state.rowData.length > 0 && <Intraday rowData={intradayDataBuilder()} />}
