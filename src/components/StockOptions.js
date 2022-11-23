@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useReducer } from "react";
 import { AgGridReact } from "ag-grid-react";
 import NavSpurts from "./NavSpurts";
 import axios from "axios";
+import _ from "lodash";
 
 const ACTIONS = {
   INITIAL: "initial",
@@ -110,12 +111,14 @@ const StockOptions = () => {
       axios
         .get("https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings")
         .then((res) => {
-          const resp = res.data.data.slice(0, 20);
+          // const resp = res.data.data.slice(0, 20);
+          const resp = res.data.data;
 
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
               spurts: resp,
+              // spurts: _.orderBy(resp, ["volume"], ["desc"]),
               timestamp: res.data.timestamp,
             },
           });
@@ -179,7 +182,6 @@ const StockOptions = () => {
           }
         });
       });
-      console.log(bullStock);
       dispatch({
         type: ACTIONS.INITIAL,
         payload: {
@@ -199,7 +201,6 @@ const StockOptions = () => {
           }
         });
       });
-      console.log(bearStock);
       dispatch({
         type: ACTIONS.INITIAL,
         payload: {
@@ -271,7 +272,7 @@ const StockOptions = () => {
             }}
           />
         </div>
-
+        {/* BULLISH */}
         <div
           className="ag-theme-balham mb-4"
           style={{ width: "20%", height: "500px" }}
@@ -279,7 +280,7 @@ const StockOptions = () => {
           <AgGridReact
             ref={gridRef}
             enableCellChangeFlash={true}
-            rowData={state.bullish}
+            rowData={state.bullish.slice(0, 5)}
             columnDefs={columnDefsBullish}
             defaultColDef={{
               suppressMovable: true,
@@ -289,6 +290,7 @@ const StockOptions = () => {
           />
         </div>
 
+        {/* BEARISH */}
         <div
           className="ag-theme-balham mb-4"
           style={{ width: "20%", height: "500px" }}
@@ -296,7 +298,7 @@ const StockOptions = () => {
           <AgGridReact
             ref={gridRef}
             enableCellChangeFlash={true}
-            rowData={state.bearStock}
+            rowData={state.bearStock.slice(0, 5)}
             columnDefs={columnDefsBearish}
             defaultColDef={{
               suppressMovable: true,
