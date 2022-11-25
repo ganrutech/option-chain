@@ -107,17 +107,26 @@ const StockOptions = () => {
   ];
 
   useEffect(() => {
+    const conditionalArray = ["FINNIFTY", "BANKNIFTY", "NIFTY"];
     try {
       axios
         .get("https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings")
         .then((res) => {
-          // const resp = res.data.data.slice(0, 20);
           const resp = res.data.data;
+          // const resp = res.data.data;
 
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              spurts: resp,
+              spurts: _.filter(resp, function (o) {
+                if (
+                  o.symbol !== conditionalArray[0] &&
+                  o.symbol !== conditionalArray[1] &&
+                  o.symbol !== conditionalArray[2]
+                ) {
+                  return o;
+                }
+              }).slice(0, 10),
               // spurts: _.orderBy(resp, ["volume"], ["desc"]),
               timestamp: res.data.timestamp,
             },
@@ -175,9 +184,9 @@ const StockOptions = () => {
   useEffect(() => {
     const bullStock = [];
     if (state.topGainer.length > 0 && state.spurts.length > 0) {
-      state.spurts.forEach((element) => {
-        state.topGainer.forEach((item) => {
-          if (item.symbol === element.symbol && item.ltp > 150) {
+      state.topGainer.forEach((item) => {
+        state.spurts.forEach((element) => {
+          if (item.symbol === element.symbol) {
             bullStock.push({ symbol: element.symbol });
           }
         });
@@ -194,9 +203,9 @@ const StockOptions = () => {
   useEffect(() => {
     const bearStock = [];
     if (state.topLooser.length > 0 && state.spurts.length > 0) {
-      state.spurts.forEach((element) => {
-        state.topLooser.forEach((item) => {
-          if (item.symbol === element.symbol && item.ltp > 150) {
+      state.topLooser.forEach((item) => {
+        state.spurts.forEach((element) => {
+          if (item.symbol === element.symbol) {
             bearStock.push({ symbol: element.symbol });
           }
         });

@@ -279,7 +279,7 @@ const NiftyStockOptions = () => {
           <AgGridReact
             ref={gridRef}
             enableCellChangeFlash={true}
-            rowData={state.bullish}
+            rowData={state.bullish.slice(0, 5)}
             columnDefs={columnDefsBullish}
             defaultColDef={{
               suppressMovable: true,
@@ -296,7 +296,7 @@ const NiftyStockOptions = () => {
           <AgGridReact
             ref={gridRef}
             enableCellChangeFlash={true}
-            rowData={state.bearStock}
+            rowData={state.bearStock.slice(0, 5)}
             columnDefs={columnDefsBearish}
             defaultColDef={{
               suppressMovable: true,
