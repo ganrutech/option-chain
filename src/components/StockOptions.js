@@ -112,8 +112,9 @@ const StockOptions = () => {
       axios
         .get("https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings")
         .then((res) => {
-          const resp = res.data.data;
+          const resp = _.orderBy(res.data.data, ["volume"], ["desc"]);
           // const resp = res.data.data;
+          // _.orderBy(resp, ["volume"], ["desc"])
 
           dispatch({
             type: ACTIONS.INITIAL,
@@ -126,7 +127,7 @@ const StockOptions = () => {
                 ) {
                   return o;
                 }
-              }).slice(0, 10),
+              }).slice(0, 15),
               // spurts: _.orderBy(resp, ["volume"], ["desc"]),
               timestamp: res.data.timestamp,
             },
@@ -149,7 +150,8 @@ const StockOptions = () => {
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              topGainer: resp,
+              // topGainer: resp,
+              topGainer: _.orderBy(resp, ["trade_quantity"], ["desc"]),
               timestamp: res.data.timestamp,
             },
           });
@@ -171,7 +173,8 @@ const StockOptions = () => {
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              topLooser: resp,
+              // topLooser: resp,
+              topLooser: _.orderBy(resp, ["trade_quantity"], ["desc"]),
               timestamp: res.data.timestamp,
             },
           });
