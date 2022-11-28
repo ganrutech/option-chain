@@ -1,10 +1,14 @@
-import React, { useRef, useEffect, useReducer } from "react";
-import { AgGridReact } from "ag-grid-react";
-import NavSpurts from "./NavSpurts";
-import axios from "axios";
-import _ from "lodash";
+import React, { useEffect, useReducer } from "react";
 
-const ACTIONS = {
+import NavSpurts from "./NavSpurts";
+import SpurtsTable from "./spurts";
+
+import TopGainer from "./gainers";
+import TopLoosers from "./loosers";
+import Bullish from "./bullish";
+import Bearish from "./bearish";
+
+export const ACTIONS = {
   INITIAL: "initial",
   SET_ROWDATA: "rowData",
 };
@@ -18,6 +22,7 @@ function reducer(state, action) {
       return state;
   }
 }
+
 const initialValue = {
   spurts: [],
   topGainer: [],
@@ -27,162 +32,8 @@ const initialValue = {
   timestamp: "",
 };
 
-const formatINR = (params) => {
-  return params.value.toLocaleString("en-IN");
-};
-
-const formatSymbol = (params) => {
-  function copyClip() {
-    navigator.clipboard.writeText(params.value);
-  }
-
-  return (
-    <div
-      onClick={() => copyClip()}
-      className={`font-semibold ${
-        params.type !== "bearish" ? "text-green-600" : "text-red-600"
-      }`}
-    >
-      {params.value}
-    </div>
-  );
-};
-
 const StockOptions = () => {
   const [state, dispatch] = useReducer(reducer, initialValue);
-  const gridRef = useRef();
-
-  const columnDefs = [
-    {
-      field: "symbol",
-      headerName: "OI Spurts",
-    },
-    {
-      field: "changeInOI",
-      cellRenderer: formatINR,
-    },
-  ];
-
-  const columnDefsGainers = [
-    {
-      field: "symbol",
-      headerName: "Top Gainers",
-    },
-    {
-      headerName: "Latest Price",
-      field: "ltp",
-      cellRenderer: formatINR,
-    },
-  ];
-
-  const columnDefsLoosers = [
-    {
-      field: "symbol",
-      headerName: "Top Loosers",
-    },
-    {
-      headerName: "Latest Price",
-      field: "ltp",
-      cellRenderer: formatINR,
-    },
-  ];
-
-  const columnDefsBullish = [
-    {
-      headerName: "Bullish",
-      field: "symbol",
-      cellRenderer: formatSymbol,
-    },
-  ];
-
-  const columnDefsBearish = [
-    {
-      headerName: "Bearish",
-      field: "symbol",
-      cellRenderer: formatSymbol,
-      cellRendererParams: {
-        type: "bearish",
-      },
-    },
-  ];
-
-  useEffect(() => {
-    const conditionalArray = ["FINNIFTY", "BANKNIFTY", "NIFTY"];
-    try {
-      axios
-        .get("https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings")
-        .then((res) => {
-          const resp = _.orderBy(res.data.data, ["volume"], ["desc"]);
-          // const resp = res.data.data;
-          // _.orderBy(resp, ["volume"], ["desc"])
-
-          dispatch({
-            type: ACTIONS.INITIAL,
-            payload: {
-              spurts: _.filter(resp, function (o) {
-                if (
-                  o.symbol !== conditionalArray[0] &&
-                  o.symbol !== conditionalArray[1] &&
-                  o.symbol !== conditionalArray[2]
-                ) {
-                  return o;
-                }
-              }).slice(0, 15),
-              // spurts: _.orderBy(resp, ["volume"], ["desc"]),
-              timestamp: res.data.timestamp,
-            },
-          });
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-      axios
-        .get(
-          "https://www.nseindia.com/api/live-analysis-variations?index=gainers"
-        )
-        .then((res) => {
-          const resp = res.data.FOSec.data;
-
-          dispatch({
-            type: ACTIONS.INITIAL,
-            payload: {
-              // topGainer: resp,
-              topGainer: _.orderBy(resp, ["trade_quantity"], ["desc"]),
-              timestamp: res.data.timestamp,
-            },
-          });
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-      axios
-        .get(
-          "https://www.nseindia.com/api/live-analysis-variations?index=loosers"
-        )
-        .then((res) => {
-          const resp = res.data.FOSec.data;
-
-          dispatch({
-            type: ACTIONS.INITIAL,
-            payload: {
-              // topLooser: resp,
-              topLooser: _.orderBy(resp, ["trade_quantity"], ["desc"]),
-              timestamp: res.data.timestamp,
-            },
-          });
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
 
   useEffect(() => {
     const bullStock = [];
@@ -233,92 +84,12 @@ const StockOptions = () => {
       >
         Reload
       </button>
-      <div className="flex justify-center space-x-4">
-        <div
-          className="ag-theme-balham mb-4"
-          style={{ width: "20%", height: "500px" }}
-        >
-          <AgGridReact
-            ref={gridRef}
-            enableCellChangeFlash={true}
-            rowData={state.spurts}
-            columnDefs={columnDefs}
-            defaultColDef={{
-              suppressMovable: true,
-              suppressSizeToFit: true,
-              width: "185",
-            }}
-          />
-        </div>
-
-        <div
-          className="ag-theme-balham mb-4"
-          style={{ width: "20%", height: "500px" }}
-        >
-          <AgGridReact
-            ref={gridRef}
-            enableCellChangeFlash={true}
-            rowData={state.topGainer}
-            columnDefs={columnDefsGainers}
-            defaultColDef={{
-              suppressMovable: true,
-              suppressSizeToFit: true,
-              width: "185",
-            }}
-          />
-        </div>
-
-        <div
-          className="ag-theme-balham mb-4"
-          style={{ width: "20%", height: "500px" }}
-        >
-          <AgGridReact
-            ref={gridRef}
-            enableCellChangeFlash={true}
-            rowData={state.topLooser}
-            columnDefs={columnDefsLoosers}
-            defaultColDef={{
-              suppressMovable: true,
-              suppressSizeToFit: true,
-              width: "185",
-            }}
-          />
-        </div>
-        {/* BULLISH */}
-        <div
-          className="ag-theme-balham mb-4"
-          style={{ width: "20%", height: "500px" }}
-        >
-          <AgGridReact
-            ref={gridRef}
-            enableCellChangeFlash={true}
-            rowData={state.bullish.slice(0, 5)}
-            columnDefs={columnDefsBullish}
-            defaultColDef={{
-              suppressMovable: true,
-              suppressSizeToFit: true,
-              width: "370",
-            }}
-          />
-        </div>
-
-        {/* BEARISH */}
-        <div
-          className="ag-theme-balham mb-4"
-          style={{ width: "20%", height: "500px" }}
-        >
-          <AgGridReact
-            ref={gridRef}
-            enableCellChangeFlash={true}
-            rowData={state.bearStock.slice(0, 5)}
-            columnDefs={columnDefsBearish}
-            defaultColDef={{
-              suppressMovable: true,
-              suppressSizeToFit: true,
-              width: "370",
-            }}
-          />
-        </div>
+      <div className="grid grid-cols-5 gap-2 mt-4">
+        <SpurtsTable state={state} dispatch={dispatch} />
+        <TopGainer state={state} dispatch={dispatch} />
+        <TopLoosers state={state} dispatch={dispatch} />
+        <Bullish state={state} />
+        <Bearish state={state} />
       </div>
     </div>
   );
