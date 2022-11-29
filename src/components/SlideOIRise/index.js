@@ -2,33 +2,38 @@ import React, { useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import axios from "axios";
 import _ from "lodash";
-import { ACTIONS } from "../StockOptions";
 
+import { ACTIONS } from "../StockOptions";
 import FormatINR from "../cells/FormatINR";
+
 import { conditionalArray } from "../StockOptions";
 
-const SpurtsTable = ({ state, dispatch }) => {
+function copyStrikePrice(params) {
+  function copyClip(value) {
+    navigator.clipboard.writeText(`${params.value} ${value.data.strikePrice}`);
+  }
+  return <div onClick={() => copyClip(params)}>{params.value}</div>;
+}
+
+const SlideOIRise = ({ state, dispatch }) => {
   useEffect(() => {
     try {
       axios
-        .get("https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings")
+        .get("https://www.nseindia.com/api/live-analysis-oi-spurts-contracts")
         .then((res) => {
-          // const resp = _.orderBy(res.data.data, ["volume"], ["desc"]);
-          const resp = res.data.data;
-          // _.orderBy(resp, ["volume"], ["desc"])
+          const resp = res.data.data[1]["Slide-in-OI-Rise"];
 
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              spurts: _.filter(resp, function (o) {
+              slideOI: _.filter(resp, function (o) {
                 if (
                   !conditionalArray.includes(o.symbol) &&
                   o.symbol.length > 2
                 ) {
                   return o;
                 }
-              }).slice(0, 10),
-              // spurts: _.orderBy(resp, ["volume"], ["desc"]),
+              }),
               timestamp: res.data.timestamp,
             },
           });
@@ -42,10 +47,18 @@ const SpurtsTable = ({ state, dispatch }) => {
   const columnDefs = [
     {
       field: "symbol",
-      headerName: "OI Spurts",
+      headerName: "Slide-in-OI-Rise",
+      cellRenderer: copyStrikePrice,
     },
     {
-      field: "avgInOI",
+      field: "strikePrice",
+    },
+    {
+      field: "optionType",
+    },
+    {
+      headerName: "Latest Price",
+      field: "ltp",
       cellRenderer: FormatINR,
     },
   ];
@@ -53,20 +66,20 @@ const SpurtsTable = ({ state, dispatch }) => {
   return (
     <div
       className="ag-theme-balham mb-4"
-      style={{ width: "100%", height: "500px" }}
+      style={{ width: "100%", height: "200px" }}
     >
       <AgGridReact
         enableCellChangeFlash={true}
-        rowData={state.spurts}
+        rowData={state.slideOI}
         columnDefs={columnDefs}
         defaultColDef={{
           suppressMovable: true,
           suppressSizeToFit: true,
-          width: "185",
+          width: "230",
         }}
       />
     </div>
   );
 };
 
-export default SpurtsTable;
+export default SlideOIRise;

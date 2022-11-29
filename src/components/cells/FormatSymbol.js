@@ -1,13 +1,13 @@
 import React from "react";
 
-const FormatSymbol = (params) => {
-  function copyClip() {
-    navigator.clipboard.writeText(params.value);
-  }
+export function copyClip(value) {
+  navigator.clipboard.writeText(value);
+}
 
+const FormatSymbol = (params) => {
   return (
     <div
-      onClick={() => copyClip()}
+      onClick={() => copyClip(params.value)}
       className={`font-semibold ${
         params.type !== "bearish" ? "text-green-600" : "text-red-600"
       }`}

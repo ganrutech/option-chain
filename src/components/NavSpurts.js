@@ -50,6 +50,19 @@ const NavSpurts = () => {
             Top Loosers
           </span>
         </li>
+        <li>
+          <span
+            className="text-blue-500 underline cursor-pointer"
+            onClick={() =>
+              window.open(
+                "https://www.nseindia.com/api/live-analysis-oi-spurts-contracts",
+                "_blank"
+              )
+            }
+          >
+            Spurts Contracts
+          </span>
+        </li>
       </ul>
     </nav>
   );

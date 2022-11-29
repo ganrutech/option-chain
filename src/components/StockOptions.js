@@ -7,6 +7,15 @@ import TopGainer from "./gainers";
 import TopLoosers from "./loosers";
 import Bullish from "./bullish";
 import Bearish from "./bearish";
+import SlideOIRise from "./SlideOIRise";
+
+export const conditionalArray = [
+  "FINNIFTY",
+  "BANKNIFTY",
+  "NIFTY",
+  "MIDCPNIFTY",
+  "-",
+];
 
 export const ACTIONS = {
   INITIAL: "initial",
@@ -30,6 +39,8 @@ const initialValue = {
   bullish: [],
   bearStock: [],
   timestamp: "",
+  slideOI: [],
+  RiseOI: [],
 };
 
 const StockOptions = () => {
@@ -90,6 +101,9 @@ const StockOptions = () => {
         <TopLoosers state={state} dispatch={dispatch} />
         <Bullish state={state} />
         <Bearish state={state} />
+      </div>
+      <div className="grid grid-cols-2 gap-2 mt-4">
+        <SlideOIRise state={state} dispatch={dispatch} />
       </div>
     </div>
   );
