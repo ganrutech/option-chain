@@ -95,14 +95,14 @@ const StockOptions = () => {
       >
         Reload
       </button>
-      <div className="grid grid-cols-5 gap-2 mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-2 mt-4">
         <SpurtsTable state={state} dispatch={dispatch} />
         <TopGainer state={state} dispatch={dispatch} />
         <TopLoosers state={state} dispatch={dispatch} />
         <Bullish state={state} />
         <Bearish state={state} />
       </div>
-      <div className="grid grid-cols-2 gap-2 mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-4">
         <SlideOIRise state={state} dispatch={dispatch} />
       </div>
     </div>

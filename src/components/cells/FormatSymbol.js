@@ -8,7 +8,7 @@ const FormatSymbol = (params) => {
   return (
     <div
       onClick={() => copyClip(params.value)}
-      className={`font-semibold ${
+      className={`font-semibold cursor-pointer ${
         params.type !== "bearish" ? "text-green-600" : "text-red-600"
       }`}
     >

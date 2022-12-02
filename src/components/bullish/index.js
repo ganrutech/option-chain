@@ -13,6 +13,7 @@ const Bullish = ({ state }) => {
 
   return (
     <div
+      id="mobile"
       className="ag-theme-balham mb-4"
       style={{ width: "100%", height: "500px" }}
     >

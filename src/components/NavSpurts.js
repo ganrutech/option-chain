@@ -2,6 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const NavSpurts = () => {
+  const handleScroll = (e) => {
+    e.preventDefault();
+    const element = document.querySelector("#mobile");
+    if (element) {
+      const location = element.offsetTop;
+
+      window.scrollTo({
+        left: 0,
+        top: location - 56,
+      });
+    }
+  };
+
   return (
     <nav>
       <ul className="flex items-center space-x-4">
@@ -11,7 +24,14 @@ const NavSpurts = () => {
         <li className="text-blue-500 underline">
           <Link to="/stock-options">Spurts OI</Link>
         </li>
-        <li>
+
+        <li className="text-green-600 font-bold underline">
+          <Link to="/stock-options" onClick={handleScroll}>
+            SCROLL
+          </Link>
+        </li>
+
+        {/* <li>
           <span
             className="text-blue-500 underline cursor-pointer"
             onClick={() =>
@@ -23,8 +43,8 @@ const NavSpurts = () => {
           >
             Spurts URL
           </span>
-        </li>
-        <li>
+        </li> */}
+        {/* <li>
           <span
             className="text-blue-500 underline cursor-pointer"
             onClick={() =>
@@ -62,7 +82,7 @@ const NavSpurts = () => {
           >
             Spurts Contracts
           </span>
-        </li>
+        </li> */}
       </ul>
     </nav>
   );
