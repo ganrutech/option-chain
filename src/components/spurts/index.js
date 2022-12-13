@@ -24,10 +24,11 @@ const SpurtsTable = ({ state, dispatch }) => {
                 if (
                   !conditionalArray.includes(o.symbol) &&
                   o.symbol.length > 2
+                  // && o.underlyingValue < 2000
                 ) {
                   return o;
                 }
-              }).slice(0, 10),
+              }).slice(0, 15),
               // spurts: _.orderBy(resp, ["volume"], ["desc"]),
               timestamp: res.data.timestamp,
             },
