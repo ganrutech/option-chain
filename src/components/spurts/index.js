@@ -23,8 +23,8 @@ const SpurtsTable = ({ state, dispatch }) => {
               spurts: _.filter(resp, function (o) {
                 if (
                   !conditionalArray.includes(o.symbol) &&
-                  o.symbol.length > 2
-                  // && o.underlyingValue < 2000
+                  o.symbol.length > 2 &&
+                  o.underlyingValue > 100
                 ) {
                   return o;
                 }

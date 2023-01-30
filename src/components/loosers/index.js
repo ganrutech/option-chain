@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import axios from "axios";
-// import _ from "lodash";
+import _ from "lodash";
 import { ACTIONS } from "../StockOptions";
 
 import FormatINR from "../cells/FormatINR";
@@ -19,8 +19,8 @@ const TopLoosers = ({ state, dispatch }) => {
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              // topLooser: _.filter(resp, (o) => o.ltp < 2000).slice(0, 5),
-              topLooser: resp.slice(0, 5),
+              topLooser: _.filter(resp, (o) => o.ltp > 100).slice(0, 5),
+              // topLooser: resp.slice(0, 5),
               // topLooser: _.orderBy(resp, ["turnover"], ["desc"]),
               // topLooser: _.orderBy(resp, ["perChange"], ["desc"]),
               timestamp: res.data.timestamp,
