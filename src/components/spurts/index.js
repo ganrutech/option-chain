@@ -28,7 +28,7 @@ const SpurtsTable = ({ state, dispatch }) => {
                 ) {
                   return o;
                 }
-              }).slice(0, 15),
+              }).slice(0, 10),
               // spurts: _.orderBy(resp, ["volume"], ["desc"]),
               timestamp: res.data.timestamp,
             },

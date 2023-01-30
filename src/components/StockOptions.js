@@ -7,7 +7,7 @@ import TopGainer from "./gainers";
 import TopLoosers from "./loosers";
 import Bullish from "./bullish";
 import Bearish from "./bearish";
-import SlideOIRise from "./SlideOIRise";
+// import SlideOIRise from "./SlideOIRise";
 
 export const conditionalArray = [
   "FINNIFTY",
@@ -102,9 +102,9 @@ const StockOptions = () => {
         <Bullish state={state} />
         <Bearish state={state} />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-4">
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-4">
         <SlideOIRise state={state} dispatch={dispatch} />
-      </div>
+      </div> */}
     </div>
   );
 };
