@@ -24,7 +24,8 @@ const SpurtsTable = ({ state, dispatch }) => {
                 if (
                   !conditionalArray.includes(o.symbol) &&
                   o.symbol.length > 2 &&
-                  o.underlyingValue > 100
+                  o.underlyingValue > 100 &&
+                  o.underlyingValue < 5000
                 ) {
                   return o;
                 }
