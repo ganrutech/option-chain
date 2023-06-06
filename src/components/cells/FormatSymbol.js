@@ -1,12 +1,8 @@
 import React from "react";
 
 export function copyClip(value) {
-  let dd = new Date();
-  navigator.clipboard.writeText(
-    `${value} ${dd
-      .toLocaleString("en-us", { month: "short" })
-      .toUpperCase()} FUT`
-  );
+  // let dd = new Date();
+  navigator.clipboard.writeText(value);
 }
 
 const FormatSymbol = (params) => {

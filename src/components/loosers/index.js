@@ -19,10 +19,7 @@ const TopLoosers = ({ state, dispatch }) => {
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              topLooser: _.filter(
-                resp,
-                (o) => o.ltp > 100 && o.ltp < 5000
-              ).slice(0, 5),
+              topLooser: _.filter(resp, (o) => o.ltp > 100).slice(0, 5),
               // topLooser: resp.slice(0, 5),
               // topLooser: _.orderBy(resp, ["turnover"], ["desc"]),
               // topLooser: _.orderBy(resp, ["perChange"], ["desc"]),
