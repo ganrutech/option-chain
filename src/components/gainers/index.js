@@ -19,7 +19,7 @@ const TopGainer = ({ state, dispatch }) => {
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              topGainer: _.filter(resp, (o) => o.ltp > 100).slice(0, 5),
+              topGainer: _.filter(resp, (o) => o.ltp > 100).slice(0, 10),
               // topGainer: resp.slice(0, 5),
               // topGainer: _.orderBy(resp, ["turnover"], ["desc"]),
               timestamp: res.data.timestamp,

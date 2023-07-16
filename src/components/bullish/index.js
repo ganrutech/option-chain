@@ -19,7 +19,7 @@ const Bullish = ({ state }) => {
     >
       <AgGridReact
         enableCellChangeFlash={true}
-        rowData={state.bullish.slice(0, 5)}
+        rowData={state.bullish}
         columnDefs={columnDefsBullish}
         defaultColDef={{
           suppressMovable: true,

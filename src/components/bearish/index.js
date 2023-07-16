@@ -22,7 +22,7 @@ const Bearish = ({ state }) => {
     >
       <AgGridReact
         enableCellChangeFlash={true}
-        rowData={state.bearStock.slice(0, 5)}
+        rowData={state.bearStock}
         columnDefs={columnDefsBearish}
         defaultColDef={{
           suppressMovable: true,
