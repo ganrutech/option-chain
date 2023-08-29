@@ -5,6 +5,7 @@ import _ from "lodash";
 import { ACTIONS } from "../StockOptions";
 
 import FormatINR from "../cells/FormatINR";
+import FormatSymbol from "../cells/FormatSymbol";
 
 const TopLoosers = ({ state, dispatch }) => {
   useEffect(() => {
@@ -15,14 +16,12 @@ const TopLoosers = ({ state, dispatch }) => {
         )
         .then((res) => {
           const resp = res.data.FOSec.data;
+          const looserData = [..._.filter(resp, (o) => o.ltp > 100)];
 
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              topLooser: _.filter(resp, (o) => o.ltp > 100).slice(0, 10),
-              // topLooser: resp.slice(0, 5),
-              // topLooser: _.orderBy(resp, ["turnover"], ["desc"]),
-              // topLooser: _.orderBy(resp, ["perChange"], ["desc"]),
+              topLooser: [...looserData.slice(0, 10)],
               timestamp: res.data.timestamp,
             },
           });
@@ -35,8 +34,17 @@ const TopLoosers = ({ state, dispatch }) => {
 
   const columnDefsLoosers = [
     {
+      headerName: "Row",
+      valueGetter: "node.rowIndex + 1",
+      width: 10,
+    },
+    {
       field: "symbol",
       headerName: "Top Loosers",
+      cellRenderer: FormatSymbol,
+      cellRendererParams: {
+        type: "bearish",
+      },
     },
     {
       headerName: "Latest Price",

@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useReducer } from "react";
 import { AgGridReact } from "ag-grid-react";
 import NavSpurts from "./NavSpurts";
 import axios from "axios";
+import FormatSymbol from "./cells/FormatSymbol";
 
 const ACTIONS = {
   INITIAL: "initial",
@@ -66,6 +67,7 @@ const NiftyStockOptions = () => {
     {
       field: "symbol",
       headerName: "Top Gainers",
+      cellRenderer: FormatSymbol,
     },
     {
       headerName: "Net Price",
@@ -78,6 +80,10 @@ const NiftyStockOptions = () => {
     {
       field: "symbol",
       headerName: "Top Loosers",
+      cellRenderer: FormatSymbol,
+      cellRendererParams: {
+        type: "bearish",
+      },
     },
     {
       headerName: "Net Price",
@@ -115,7 +121,7 @@ const NiftyStockOptions = () => {
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              spurts: resp,
+              spurts: resp.slice(0, 20),
               timestamp: res.data.timestamp,
             },
           });
@@ -137,7 +143,7 @@ const NiftyStockOptions = () => {
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              topGainer: resp,
+              topGainer: resp.slice(0, 5),
               timestamp: res.data.timestamp,
             },
           });
@@ -159,7 +165,7 @@ const NiftyStockOptions = () => {
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              topLooser: resp,
+              topLooser: resp.slice(0, 5),
               timestamp: res.data.timestamp,
             },
           });

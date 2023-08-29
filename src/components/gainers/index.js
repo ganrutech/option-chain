@@ -5,6 +5,7 @@ import axios from "axios";
 import { ACTIONS } from "../StockOptions";
 import FormatINR from "../cells/FormatINR";
 import _ from "lodash";
+import FormatSymbol from "../cells/FormatSymbol";
 
 const TopGainer = ({ state, dispatch }) => {
   useEffect(() => {
@@ -15,13 +16,12 @@ const TopGainer = ({ state, dispatch }) => {
         )
         .then((res) => {
           const resp = res.data.FOSec.data;
+          const gainerData = [..._.filter(resp, (o) => o.ltp > 100)];
 
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              topGainer: _.filter(resp, (o) => o.ltp > 100).slice(0, 10),
-              // topGainer: resp.slice(0, 5),
-              // topGainer: _.orderBy(resp, ["turnover"], ["desc"]),
+              topGainer: [...gainerData.slice(0, 10)],
               timestamp: res.data.timestamp,
             },
           });
@@ -34,8 +34,14 @@ const TopGainer = ({ state, dispatch }) => {
 
   const columnDefsGainers = [
     {
+      headerName: "Row",
+      valueGetter: "node.rowIndex + 1",
+      width: 10,
+    },
+    {
       field: "symbol",
       headerName: "Top Gainers",
+      cellRenderer: FormatSymbol,
     },
     {
       headerName: "Latest Price",
