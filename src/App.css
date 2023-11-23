@@ -6,3 +6,16 @@
 .ag-header-group-cell-label {
   justify-content: center;
 }
+
+.result-table .ag-header-container {
+  background-color: rgba(239, 4, 4, 0.4);
+}
+#mobile.result-table .ag-header-container {
+  background-color: rgba(15, 163, 62, 0.5);
+}
+
+.result-table .ag-header-cell-text {
+  font-size: 1rem;
+  color: #373737;
+  font-weight: 700;
+}

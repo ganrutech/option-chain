@@ -5,16 +5,20 @@ import FormatSymbol from "../cells/FormatSymbol";
 const Bullish = ({ state }) => {
   const columnDefsBullish = [
     {
-      headerName: "Spurts Bullish",
+      headerName: "Bullish",
+      flex: 1,
       field: "symbol",
       cellRenderer: FormatSymbol,
+      cellRendererParams: {
+        result: true,
+      },
     },
   ];
 
   return (
     <div
       id="mobile"
-      className="ag-theme-balham mb-4"
+      className="ag-theme-balham mb-4 result-table"
       style={{ width: "100%", height: "500px" }}
     >
       <AgGridReact
@@ -24,7 +28,6 @@ const Bullish = ({ state }) => {
         defaultColDef={{
           suppressMovable: true,
           suppressSizeToFit: true,
-          width: "370",
         }}
       />
     </div>

@@ -44,10 +44,12 @@ const SpurtsTable = ({ state, dispatch }) => {
     {
       field: "symbol",
       headerName: "OI Spurts",
+      flex: 1,
     },
     {
       field: "avgInOI",
       cellRenderer: FormatINR,
+      flex: 1,
     },
   ];
 
@@ -63,7 +65,6 @@ const SpurtsTable = ({ state, dispatch }) => {
         defaultColDef={{
           suppressMovable: true,
           suppressSizeToFit: true,
-          width: "185",
         }}
       />
     </div>

@@ -6,26 +6,48 @@ import { ACTIONS } from "../StockOptions";
 import FormatINR from "../cells/FormatINR";
 import _ from "lodash";
 import FormatSymbol from "../cells/FormatSymbol";
+import { useLocation } from "react-router-dom";
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 const TopGainer = ({ state, dispatch }) => {
-  useEffect(() => {
-    try {
-      axios
-        .get(
-          "https://www.nseindia.com/api/live-analysis-variations?index=gainers"
-        )
-        .then((res) => {
-          const resp = res.data.FOSec.data;
-          const gainerData = [..._.filter(resp, (o) => o.ltp > 100)];
+  let queryParams = useQuery();
+  const isQuery = queryParams.get("search") === "eq";
 
-          dispatch({
-            type: ACTIONS.INITIAL,
-            payload: {
-              topGainer: [...gainerData.slice(0, 10)],
-              timestamp: res.data.timestamp,
-            },
-          });
+  useEffect(() => {
+    const defaultUrl =
+      "https://www.nseindia.com/api/live-analysis-variations?index=gainers";
+    const alternateUrl =
+      "https://www.nseindia.com/api/equity-stockIndices?index=SECURITIES%20IN%20F%26O";
+    const getUrl = isQuery ? alternateUrl : defaultUrl;
+
+    try {
+      axios.get(getUrl).then((res) => {
+        let resp = [];
+        let gainerData = [];
+
+        if (isQuery) {
+          resp = res.data.data;
+        } else {
+          resp = res.data.FOSec.data;
+        }
+
+        if (isQuery) {
+          gainerData = [..._.filter(resp, (o) => Number(o.lastPrice) > 100)];
+        } else {
+          gainerData = [..._.filter(resp, (o) => o.ltp > 100)];
+        }
+
+        dispatch({
+          type: ACTIONS.INITIAL,
+          payload: {
+            topGainer: [...gainerData.slice(0, 10)],
+            timestamp: res.data.timestamp,
+          },
         });
+      });
     } catch (error) {
       console.log(error);
     }
@@ -34,19 +56,21 @@ const TopGainer = ({ state, dispatch }) => {
 
   const columnDefsGainers = [
     {
-      headerName: "Row",
+      headerName: "S.No",
       valueGetter: "node.rowIndex + 1",
-      width: 10,
+      width: 100,
     },
     {
       field: "symbol",
       headerName: "Top Gainers",
       cellRenderer: FormatSymbol,
+      flex: 1,
     },
     {
       headerName: "Latest Price",
-      field: "ltp",
+      field: isQuery ? "lastPrice" : "ltp",
       cellRenderer: FormatINR,
+      flex: 1,
     },
   ];
 
@@ -62,7 +86,6 @@ const TopGainer = ({ state, dispatch }) => {
         defaultColDef={{
           suppressMovable: true,
           suppressSizeToFit: true,
-          width: "185",
         }}
       />
     </div>

@@ -6,26 +6,52 @@ import { ACTIONS } from "../StockOptions";
 
 import FormatINR from "../cells/FormatINR";
 import FormatSymbol from "../cells/FormatSymbol";
+import { useLocation } from "react-router-dom";
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 const TopLoosers = ({ state, dispatch }) => {
-  useEffect(() => {
-    try {
-      axios
-        .get(
-          "https://www.nseindia.com/api/live-analysis-variations?index=loosers"
-        )
-        .then((res) => {
-          const resp = res.data.FOSec.data;
-          const looserData = [..._.filter(resp, (o) => o.ltp > 100)];
+  let queryParams = useQuery();
+  const isQuery = queryParams.get("search") === "eq";
 
-          dispatch({
-            type: ACTIONS.INITIAL,
-            payload: {
-              topLooser: [...looserData.slice(0, 10)],
-              timestamp: res.data.timestamp,
-            },
-          });
+  useEffect(() => {
+    const defaultUrl =
+      "https://www.nseindia.com/api/live-analysis-variations?index=loosers";
+    const alternateUrl =
+      "https://www.nseindia.com/api/equity-stockIndices?index=SECURITIES%20IN%20F%26O";
+    const getUrl =
+      queryParams.get("search") === "eq" ? alternateUrl : defaultUrl;
+
+    try {
+      axios.get(getUrl).then((res) => {
+        let resp = [];
+        let looserData = [];
+
+        if (isQuery) {
+          resp = res.data.data;
+        } else {
+          resp = res.data.FOSec.data;
+        }
+
+        if (isQuery) {
+          const filterLooser = _.orderBy(resp, ["pChange"], ["asc"]);
+          looserData = [
+            ..._.filter(filterLooser, (o) => Number(o.lastPrice) > 100),
+          ];
+        } else {
+          looserData = [..._.filter(resp, (o) => o.ltp > 100)];
+        }
+
+        dispatch({
+          type: ACTIONS.INITIAL,
+          payload: {
+            topLooser: [...looserData.slice(0, 10)],
+            timestamp: res.data.timestamp,
+          },
         });
+      });
     } catch (error) {
       console.log(error);
     }
@@ -34,9 +60,9 @@ const TopLoosers = ({ state, dispatch }) => {
 
   const columnDefsLoosers = [
     {
-      headerName: "Row",
+      headerName: "S.No",
       valueGetter: "node.rowIndex + 1",
-      width: 10,
+      width: 100,
     },
     {
       field: "symbol",
@@ -45,11 +71,13 @@ const TopLoosers = ({ state, dispatch }) => {
       cellRendererParams: {
         type: "bearish",
       },
+      flex: 1,
     },
     {
       headerName: "Latest Price",
-      field: "ltp",
+      field: isQuery ? "lastPrice" : "ltp",
       cellRenderer: FormatINR,
+      flex: 1,
     },
   ];
 
@@ -65,7 +93,6 @@ const TopLoosers = ({ state, dispatch }) => {
         defaultColDef={{
           suppressMovable: true,
           suppressSizeToFit: true,
-          width: "185",
         }}
       />
     </div>

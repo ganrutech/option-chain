@@ -6,18 +6,20 @@ import FormatSymbol from "../cells/FormatSymbol";
 const Bearish = ({ state }) => {
   const columnDefsBearish = [
     {
-      headerName: "Spurts Bearish",
+      headerName: "Bearish",
+      flex: 1,
       field: "symbol",
       cellRenderer: FormatSymbol,
       cellRendererParams: {
         type: "bearish",
+        result: true,
       },
     },
   ];
 
   return (
     <div
-      className="ag-theme-balham mb-4"
+      className="ag-theme-balham mb-4 result-table"
       style={{ width: "100%", height: "500px" }}
     >
       <AgGridReact
@@ -27,7 +29,6 @@ const Bearish = ({ state }) => {
         defaultColDef={{
           suppressMovable: true,
           suppressSizeToFit: true,
-          width: "370",
         }}
       />
     </div>
