@@ -5,7 +5,7 @@ import FormatSymbol from "../cells/FormatSymbol";
 const Bullish = ({ state }) => {
   const columnDefsBullish = [
     {
-      headerName: "Bullish",
+      headerName: "Gainers",
       flex: 1,
       field: "symbol",
       cellRenderer: FormatSymbol,
