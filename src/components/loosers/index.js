@@ -7,6 +7,8 @@ import { ACTIONS } from "../StockOptions";
 import FormatINR from "../cells/FormatINR";
 import FormatSymbol from "../cells/FormatSymbol";
 import { useLocation } from "react-router-dom";
+import CsvButton from "../common/CsvButton";
+import { generateCsvData } from "../common/utils";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -57,7 +59,6 @@ const TopLoosers = ({ state, dispatch }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   const columnDefsLoosers = [
     {
       headerName: "S.No",
@@ -83,9 +84,14 @@ const TopLoosers = ({ state, dispatch }) => {
 
   return (
     <div
+      id="top-loosers"
       className="ag-theme-balham mb-4"
       style={{ width: "100%", height: "500px" }}
     >
+      <CsvButton
+        csvData={[[""], ...generateCsvData(state.topLooser)]}
+        filename={"top-loosers.csv"}
+      />
       <AgGridReact
         enableCellChangeFlash={true}
         rowData={state.topLooser}

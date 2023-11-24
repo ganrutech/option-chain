@@ -1,6 +1,8 @@
 import React from "react";
 import { AgGridReact } from "ag-grid-react";
 import FormatSymbol from "../cells/FormatSymbol";
+import CsvButton from "../common/CsvButton";
+import { generateCsvData } from "../common/utils";
 
 const Bullish = ({ state }) => {
   const columnDefsBullish = [
@@ -21,6 +23,10 @@ const Bullish = ({ state }) => {
       className="ag-theme-balham mb-4 result-table"
       style={{ width: "100%", height: "500px" }}
     >
+      <CsvButton
+        csvData={[[""], ...generateCsvData(state.bullish)]}
+        filename={"top-gainers.csv"}
+      />
       <AgGridReact
         enableCellChangeFlash={true}
         rowData={state.bullish}

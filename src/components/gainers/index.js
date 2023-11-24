@@ -7,6 +7,8 @@ import FormatINR from "../cells/FormatINR";
 import _ from "lodash";
 import FormatSymbol from "../cells/FormatSymbol";
 import { useLocation } from "react-router-dom";
+import CsvButton from "../common/CsvButton";
+import { generateCsvData } from "../common/utils";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -76,9 +78,14 @@ const TopGainer = ({ state, dispatch }) => {
 
   return (
     <div
+      id="top-gainers"
       className="ag-theme-balham mb-4"
       style={{ width: "100%", height: "500px" }}
     >
+      <CsvButton
+        csvData={[[""], ...generateCsvData(state.topGainer)]}
+        filename={"top-gainers.csv"}
+      />
       <AgGridReact
         enableCellChangeFlash={true}
         rowData={state.topGainer}
