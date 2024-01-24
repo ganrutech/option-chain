@@ -14,8 +14,8 @@ const SpurtsTable = ({ state, dispatch }) => {
         .get("https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings")
         .then((res) => {
           // const resp = _.orderBy(res.data.data, ["volume"], ["desc"]);
-          const resp = res.data.data;
-          // _.orderBy(resp, ["volume"], ["desc"])
+          const dd = res.data.data;
+          const resp = _.orderBy(dd, ["volume"], ["desc"]);
 
           dispatch({
             type: ACTIONS.INITIAL,
