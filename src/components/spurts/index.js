@@ -15,12 +15,13 @@ const SpurtsTable = ({ state, dispatch }) => {
         .then((res) => {
           // const resp = _.orderBy(res.data.data, ["volume"], ["desc"]);
           const dd = res.data.data;
-          const resp = _.orderBy(dd, ["volume"], ["desc"]);
+          // const resp = _.orderBy(dd, ["volume"], ["desc"]);
+          // const resp1 = _.orderBy(resp, ["changeInOI"], ["desc"]);
 
           dispatch({
             type: ACTIONS.INITIAL,
             payload: {
-              spurts: _.filter(resp, function (o) {
+              spurts: _.filter(dd, function (o) {
                 if (
                   !conditionalArray.includes(o.symbol) &&
                   o.symbol.length > 2 &&
